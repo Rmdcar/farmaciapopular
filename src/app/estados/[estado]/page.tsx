@@ -7,7 +7,6 @@ import Link from 'next/link';
 
 interface Dado {
   UF: string;
-  "CÓD. MUNICÍPIO": string;
   MUNICÍPIO: string;
   CNPJ: string;
   FARMÁCIA: string;

@@ -6,7 +6,6 @@ import Link from 'next/link';
 
 interface Dado {
   UF: string;
-  "CÓD. MUNICÍPIO": string;
   MUNICÍPIO: string;
   CNPJ: string;
   FARMÁCIA: string;
@@ -19,18 +18,21 @@ export default function Page() {
   const params = useParams();
   const estado = params?.estado;
   const cidade = params?.cidade;
-  const cityFixed = cidade?.replace(/_/g, ' ');
+  const cityFixed = typeof cidade === 'string' ? cidade.replace(/_/g, ' ') : '';
 
-  // Verifique se os parâmetros 'estado' e 'cidade' estão definidos e são strings
-  if (!estado || typeof estado !== 'string' || !cidade || typeof cidade !== 'string') {
-    return <p>Parâmetros de estado ou cidade não fornecidos</p>;
+  // Verifique se os parâmetros estão definidos e são strings
+  if (!estado || typeof estado !== 'string') {
+    return <p>Estado não fornecido ou inválido</p>;
+  }
+  if (!cidade || typeof cidade !== 'string') {
+    return <p>Cidade não fornecida ou inválida</p>;
   }
 
   // Filtrar os dados com base no estado e cidade fornecidos
   const neighborhoods = (dados as Dado[]).filter(dado => dado.UF === estado && dado.MUNICÍPIO === cityFixed);
 
   // Remover duplicações de bairros usando um Set
-  const uniqueNeighborhoods = Array.from(new Set(neighborhoods.map(bairro => bairro.BAIRRO)));
+  const uniqueNeighborhoods = [...new Set(neighborhoods.map(bairro => bairro.BAIRRO))];
 
   return (
     <main>
@@ -38,7 +40,7 @@ export default function Page() {
       <ul>
         {uniqueNeighborhoods.map((bairro) => (
           <li key={bairro}>
-            <Link href={`/estados/${estado}/cidades/${cidade}/bairros/${bairro.replace(/\s/g, '_')}`} className="btnCities">
+            <Link href={`/estados/${estado}/cidades/${cidade}/bairros/${bairro.replace(/\s/g, '_')}`} className="btnCities" title={`Ver farmácias no bairro ${bairro}`}>
               {bairro}
             </Link>
           </li>

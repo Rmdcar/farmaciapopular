@@ -5,8 +5,8 @@ import dados from '@/data/dados.json';
 import { useState } from 'react';
 
 interface Dado {
+  Id: string; // Adicionado
   UF: string;
-  "CÓD. MUNICÍPIO": string;
   MUNICÍPIO: string;
   CNPJ: string;
   FARMÁCIA: string;
@@ -42,8 +42,7 @@ export default function FarmaciaPage() {
   const filteredData = (dados as Dado[]).filter(dado => 
     dado.UF === estado && 
     dado.MUNICÍPIO === cidade && 
-    dado.FARMÁCIA === farmacia && 
-    (!bairro || dado.BAIRRO === bairro)
+    dado.BAIRRO === bairro
   );
 
   if (filteredData.length === 0) {
@@ -60,7 +59,7 @@ export default function FarmaciaPage() {
           const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(enderecoCompleto)}`;
 
           return (
-            <li key={data.CNPJ} className="btnPharmacies">
+            <li key={data.Id} className="btnPharmacies">
               <p>
                 <strong>CNPJ:</strong> 
                 <a href={urlReceita} target="_blank" rel="noopener noreferrer" title="Ver CNPJ na Receita Federal">
