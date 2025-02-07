@@ -1,14 +1,8 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f1e8e8;
+  --foreground: #ee3838;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #ee3838;
-  }
-}
 
 html, body {
   max-width: 100vw;
