@@ -26,6 +26,7 @@ interface ReceitaData {
   complemento: string;
   bairro: string;
   ddd_telefone_1: string;
+  FARMÁCIA: string;
 }
 
 export default function BairroPage() {
@@ -53,6 +54,9 @@ export default function BairroPage() {
   const filteredData = (dados as Dado[]).filter(dado => dado.UF === estado && dado.MUNICÍPIO === cidade && dado.BAIRRO === bairro);
   const cnpjs = filteredData.map(dado => dado.CNPJ);
 
+  console.log("Dados filtrados do arquivo JSON:", filteredData); // Debug
+  console.log("CNPJs extraídos:", cnpjs); // Debug
+
   const fetchReceitaData = async (cnpj: string) => {
     try {
       const response = await axios.get(`https://minhareceita.org/${cnpj}`);
@@ -69,12 +73,16 @@ export default function BairroPage() {
         const results = await Promise.all(cnpjs.map(cnpj => fetchReceitaData(cnpj)));
         const validResults = results.filter(data => data !== null);
 
-        const uniqueResults = Array.from(new Set(validResults.map(data => data.nome_fantasia || data.razao_social)))
-          .map(nome_fantasia => {
-            return validResults.find(data => data.nome_fantasia === nome_fantasia || data.razao_social === nome_fantasia);
-          });
+        console.log("Dados retornados pela API:", validResults); // Debug
 
-        setReceitaData(uniqueResults);
+        // Mapeia os dados da API com os dados do arquivo JSON
+        const combinedData = validResults.map((data, index) => ({
+          ...data,
+          FARMÁCIA: filteredData[index]?.FARMÁCIA || "Farmácia Desconhecida",
+        }));
+
+        console.log("Dados combinados:", combinedData); // Debug
+        setReceitaData(combinedData);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
       }
@@ -83,8 +91,6 @@ export default function BairroPage() {
     fetchAllData();
   }, [cnpjs]);
 
-  const uniquePharmacies = Array.from(new Set(filteredData.map(data => data.FARMÁCIA)));
-
   return (
     <main>
       <h1>{bairro}, {cidade}, {estado}</h1>
@@ -92,8 +98,10 @@ export default function BairroPage() {
       <ul>
         {receitaData.length > 0 ? (
           receitaData.map((data, index) => {
-            const farmaciaNome = uniquePharmacies[index] || data.nome_fantasia || data.razao_social;
+            const farmaciaNome = data.FARMÁCIA;
             const farmaciaUrl = farmaciaNome.replace(/\s/g, '_');
+
+            console.log(`Índice: ${index}, FarmaciaNome: ${farmaciaNome}, FarmaciaUrl: ${farmaciaUrl}`); // Debug
 
             return (
               <li key={data.cnpj || index}>
