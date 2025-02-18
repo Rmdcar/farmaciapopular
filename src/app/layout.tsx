@@ -36,7 +36,9 @@ export default function RootLayout({
          <h1>PROGRAMA FARMÁCIA POPULAR </h1>
          <img src="https://www.gov.br/saude/pt-br/composicao/sectics/farmacia-popular/farmacia-popular/@@govbr.institucional.banner/bca7c06c-0f14-4b22-a7be-2a8681349d7c/@@images/4963ae29-c373-4128-8371-8400cff572bc.png" alt="imagem"  className="imagem1"/>
         {children}
-        <img src="https://www.gov.br/saude/pt-br/composicao/sectics/farmacia-popular/farmacia-popular/@@govbr.institucional.banner/c59bb400-a32b-4a98-97a1-50fbc02c76a5/@@images/53a091ce-b726-4575-9448-7e9a0c76de37.png" alt="imagem" className="imagem1"/>
+        <img src="/footer.png" alt="imagem" className="imagem1"
+          
+        />
       </body>
     </html>
   );

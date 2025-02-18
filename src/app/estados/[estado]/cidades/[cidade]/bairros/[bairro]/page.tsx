@@ -54,8 +54,7 @@ export default function BairroPage() {
   const filteredData = (dados as Dado[]).filter(dado => dado.UF === estado && dado.MUNICÍPIO === cidade && dado.BAIRRO === bairro);
   const cnpjs = filteredData.map(dado => dado.CNPJ);
 
-  console.log("Dados filtrados do arquivo JSON:", filteredData); // Debug
-  console.log("CNPJs extraídos:", cnpjs); // Debug
+
 
   const fetchReceitaData = async (cnpj: string) => {
     try {
@@ -73,7 +72,7 @@ export default function BairroPage() {
         const results = await Promise.all(cnpjs.map(cnpj => fetchReceitaData(cnpj)));
         const validResults = results.filter(data => data !== null);
 
-        console.log("Dados retornados pela API:", validResults); // Debug
+   
 
         // Mapeia os dados da API com os dados do arquivo JSON
         const combinedData = validResults.map((data, index) => ({
@@ -81,7 +80,7 @@ export default function BairroPage() {
           FARMÁCIA: filteredData[index]?.FARMÁCIA || "Farmácia Desconhecida",
         }));
 
-        console.log("Dados combinados:", combinedData); // Debug
+
         setReceitaData(combinedData);
       } catch (error) {
         console.error("Erro ao buscar dados:", error);
@@ -101,9 +100,7 @@ export default function BairroPage() {
             const farmaciaNome = data.FARMÁCIA;
             const farmaciaUrl = farmaciaNome.replace(/\s/g, '_');
 
-            console.log(`Índice: ${index}, FarmaciaNome: ${farmaciaNome}, FarmaciaUrl: ${farmaciaUrl}`); // Debug
-
-            return (
+                       return (
               <li key={data.cnpj || index}>
                 <Link 
                   href={`/estados/${encodeURIComponent(estado)}/cidades/${(params.cidade ?? '')}/bairros/${encodeURIComponent(bairro ?? '')}/farmacias/${encodeURIComponent(farmaciaUrl)}`} 
