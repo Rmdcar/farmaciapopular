@@ -19,6 +19,7 @@ interface Dado {
 interface ReceitaData {
   cnpj: string;
   nome_fantasia: string;
+  razao_social: string;
   descricao_tipo_de_logradouro: string;
   logradouro: string;
   numero: string;
@@ -68,9 +69,9 @@ export default function BairroPage() {
         const results = await Promise.all(cnpjs.map(cnpj => fetchReceitaData(cnpj)));
         const validResults = results.filter(data => data !== null);
 
-        const uniqueResults = Array.from(new Set(validResults.map(data => data.nome_fantasia)))
+        const uniqueResults = Array.from(new Set(validResults.map(data => data.nome_fantasia || data.razao_social)))
           .map(nome_fantasia => {
-            return validResults.find(data => data.nome_fantasia === nome_fantasia);
+            return validResults.find(data => data.nome_fantasia === nome_fantasia || data.razao_social === nome_fantasia);
           });
 
         setReceitaData(uniqueResults);
@@ -90,16 +91,23 @@ export default function BairroPage() {
       
       <ul>
         {receitaData.length > 0 ? (
-          receitaData.map((data, index) => (
-            <li key={data.cnpj || index}>
-              <Link 
-                href={`/estados/${encodeURIComponent(estado)}/cidades/${(params.cidade ?? '')}/bairros/${encodeURIComponent(bairro ?? '')}/farmacias/${encodeURIComponent(uniquePharmacies[index].replace(/\s/g, '_'))}`} 
-                className="btnNeigborhoods"
-              >
-                <p><strong>Farmácia:</strong> {data.nome_fantasia}</p>
-              </Link>
-            </li>
-          ))
+          receitaData.map((data, index) => {
+            const farmaciaNome = uniquePharmacies[index] || data.nome_fantasia || data.razao_social;
+            const farmaciaUrl = farmaciaNome.replace(/\s/g, '_');
+
+            return (
+              <li key={data.cnpj || index}>
+                <Link 
+                  href={`/estados/${encodeURIComponent(estado)}/cidades/${(params.cidade ?? '')}/bairros/${encodeURIComponent(bairro ?? '')}/farmacias/${encodeURIComponent(farmaciaUrl)}`} 
+                  className="btnNeigborhoods"
+                >
+                  <p>
+                    <strong>Farmácia:</strong> {data.nome_fantasia || data.razao_social}
+                  </p>
+                </Link>
+              </li>
+            );
+          })
         ) : (
           <p>Carregando...</p>
         )}

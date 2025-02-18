@@ -32,7 +32,7 @@ export default function Page() {
   const neighborhoods = (dados as Dado[]).filter(dado => dado.UF === estado && dado.MUNICÍPIO === cityFixed);
 
   // Remover duplicações de bairros usando um Set
-  const uniqueNeighborhoods = [...new Set(neighborhoods.map(bairro => bairro.BAIRRO))];
+  const uniqueNeighborhoods = [...new Set(neighborhoods.map(bairro => bairro.BAIRRO))].sort();
 
   return (
     <main>
@@ -40,7 +40,7 @@ export default function Page() {
       <ul>
         {uniqueNeighborhoods.map((bairro) => (
           <li key={bairro}>
-            <Link href={`/estados/${estado}/cidades/${cidade}/bairros/${bairro.replace(/\s/g, '_')}`} className="btnCities" title={`Ver farmácias no bairro ${bairro}`}>
+            <Link href={`/estados/${estado}/cidades/${cidade}/bairros/${bairro.replace(/\s/g, '_')}`} className="btnNeigborhoods" title={`Ver farmácias no bairro ${bairro}`}>
               {bairro}
             </Link>
           </li>
